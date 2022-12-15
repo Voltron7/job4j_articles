@@ -17,6 +17,7 @@ import java.util.Properties;
 public class ArticleStore implements Store<Article>, AutoCloseable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticleStore.class.getSimpleName());
+    private static final String ERROR_MESSAGE = "Не удалось выполнить операцию: { }";
 
     private final Properties properties;
 
@@ -37,7 +38,7 @@ public class ArticleStore implements Store<Article>, AutoCloseable {
                     properties.getProperty("password")
             );
         } catch (SQLException throwables) {
-            LOGGER.error("Не удалось выполнить операцию: { }", throwables.getCause());
+            LOGGER.error(ERROR_MESSAGE, throwables.getCause());
             throw new IllegalStateException();
         }
     }
@@ -48,7 +49,7 @@ public class ArticleStore implements Store<Article>, AutoCloseable {
             var sql = Files.readString(Path.of("db/scripts", "articles.sql"));
             statement.execute(sql);
         } catch (Exception e) {
-            LOGGER.error("Не удалось выполнить операцию: { }", e.getCause());
+            LOGGER.error(ERROR_MESSAGE, e.getCause());
             throw new IllegalStateException();
         }
     }
@@ -65,7 +66,7 @@ public class ArticleStore implements Store<Article>, AutoCloseable {
                 model.setId(key.getInt(1));
             }
         } catch (Exception e) {
-            LOGGER.error("Не удалось выполнить операцию: { }", e.getCause());
+            LOGGER.error(ERROR_MESSAGE, e.getCause());
             throw new IllegalStateException();
         }
         return model;
@@ -85,7 +86,7 @@ public class ArticleStore implements Store<Article>, AutoCloseable {
                 ));
             }
         } catch (Exception e) {
-            LOGGER.error("Не удалось выполнить операцию: { }", e.getCause());
+            LOGGER.error(ERROR_MESSAGE, e.getCause());
             throw new IllegalStateException();
         }
         return articles;
